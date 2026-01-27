@@ -85,7 +85,7 @@ class ProdutoController extends Controller
 
         if($produtos == null){
             return response()->json([
-                'erro' => 'produto nao encontrada'
+                'erro' => 'produto nao encontrado'
             ]);
         }
     
