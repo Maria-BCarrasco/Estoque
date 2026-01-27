@@ -9,6 +9,24 @@ use Illuminate\Http\Request;
 class ClienteController extends Controller
 {
 
+    public function store(Request $request){
+        $verificacao = Cliente::where('cpf', '=', $request->cpf)->first();
+
+        if($verificacao == null){
+         $clientes = Cliente::create([
+            'nome' => $request->nome,
+            'cpf' => $request->cpf,
+            'idade' => $request->idade
+        ]);
+    
+        return response()->json($clientes);
+
+        } else {
+            return response()->json('Este CPF já está sendo utilizado');
+        }
+    }
+
+
     public function index()
     {
         $clientes = Cliente::all();
@@ -16,18 +34,6 @@ class ClienteController extends Controller
         return response()->json($clientes);
     }
 
-    public function store(Request $request)
-    {
-    
-        $clientes = Cliente::create([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'idade' => $request->idade
-        ]);
-
-        return response()->json($clientes);
-    }
-    
 
     public function update(Request $request)
     {
