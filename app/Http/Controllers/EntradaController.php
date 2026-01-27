@@ -3,42 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entrada;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 
 class EntradaController extends Controller
 {
     //
 
-    public function index(){
+    public function index()
+    {
 
         $entradas = Entrada::all();
 
         return response()->json($entradas);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
-        $entradas = Entrada::create([
-            'id_produto'=> $request-> id_produto,
-            'quantidade'=> $request-> quantidade
-        ]);
+        $produto = Produto::find($request->id_produto);
+
+        if ($produto == null) {
+            return response()->json('Produto não localizado');
+        } else {
+            $entradas = Entrada::create([
+                'id_produto' => $request->id_produto,
+                'quantidade' => $request->quantidade
+            ]);
+
+            if (isset($request->quantidade)) {
+                $produto->quantidade_estoque = $produto->quantidade_estoque + $request->quantidade;
+            }
+
+            $produto->update();
+
+            return response()->json('Estoque atualizado');
+        }
+
+
 
         return response()->json($entradas);
-
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
 
         $entradas = Entrada::find($id);
 
-        if($entradas == null){
+        if ($entradas == null) {
             return response()->json('Produto indisponível');
-        } 
+        }
 
         $entradas->delete();
 
         return response()->json('Produto removido');
     }
-
-
 }
