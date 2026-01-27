@@ -32,7 +32,7 @@ class EntradaController extends Controller
         $entradas = Entrada::find($id);
 
         if($entradas == null){
-            return response()->json('Produto não disponível');
+            return response()->json('Produto indisponível');
         } 
 
         $entradas->delete();
