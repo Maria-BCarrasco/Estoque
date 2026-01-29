@@ -50,12 +50,16 @@ class EntradaController extends Controller
 
         $entradas = Entrada::find($id);
 
-        if ($entradas == null) {
-            return response()->json('Produto indisponível');
-        }
+         $produto = Produto::find($entradas->id_produto);
 
+
+        if (!$entradas) {
+            return response()->json('Entrada não encontrada');
+        } else {
         $entradas->delete();
-
-        return response()->json('Produto removido');
+        $produto->quantidade_estoque = $produto->quantidade_estoque - $entradas->quantidade;
+        $produto->update();
+        return response()->json('Entrada deletada com sucesso');
+        }
     }
 }
